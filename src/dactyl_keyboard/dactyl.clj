@@ -13,7 +13,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 
 (def nrows 4)
-(def ncols 5)
+(def ncols 6)
 
 (def α (/ π 360))                        ; curvature along the columns
 (def β (/ π 360))                        ; curvature along the rows
@@ -273,7 +273,7 @@
   (apply union
          (for [column columns
                row rows
-               :when (or (.contains [2 3] column)
+               :when (or (.contains [2 3 4] column)
                          (not= row lastrow))]
            (->> single-plate
                 (key-place column row)))))
@@ -282,7 +282,7 @@
   (apply union
          (for [column columns
                row rows
-               :when (or (.contains [2 3] column)
+               :when (or (.contains [2 3 4] column)
                          (not= row lastrow))]
            (->> (sa-cap (if (and (true? pinky-15u) (= column lastcol)) 1.5 1))
                 (key-place column row)))))
@@ -500,11 +500,36 @@
     (key-place 2 lastrow web-post-tr)
     (key-place 2 cornerrow web-post-br)
     (key-place 3 cornerrow web-post-bl))
+   ;; Row connect 3-4
    (triangle-hulls
+    (key-place 4 lastrow web-post-tl)
     (key-place 3 lastrow web-post-tr)
-    (key-place 3 lastrow web-post-br)
+    (key-place 4 lastrow web-post-bl)
+    (key-place 3 lastrow web-post-br))
+   ;; Column connect for 4
+   (triangle-hulls
+    (key-place 4 cornerrow web-post-bl)
+    (key-place 4 cornerrow web-post-br)
+    (key-place 4 lastrow web-post-tl)
+    (key-place 4 lastrow web-post-tr))
+   ;; Diagonal connection 3-4
+   (triangle-hulls
+    (key-place 3 cornerrow web-post-br)
     (key-place 3 lastrow web-post-tr)
-    (key-place 4 cornerrow web-post-bl))))
+    (key-place 4 cornerrow web-post-bl)
+    (key-place 4 lastrow web-post-tl))
+   ;; Diagonal 4-5 (corner)
+   (triangle-hulls
+    (key-place 4 cornerrow web-post-br)
+    (key-place 4 lastrow web-post-tr)
+    (key-place 5 cornerrow web-post-bl)
+    (key-place 5 lastrow web-post-tl))
+   (triangle-hulls
+    (key-place 4 lastrow web-post-tr)
+    (key-place 4 lastrow web-post-br)
+    (key-place 4 lastrow web-post-tr)
+    (key-place 5 cornerrow web-post-bl)
+    )))
 
 ;;;;;;;;;;
 ;; Case ;;
@@ -599,10 +624,10 @@
    ;; (wall-brace (partial left-key-place 0 1) 0 1 web-post (partial left-key-place 0 1) -1 0 web-post)
 
    ; front wall
-   (key-wall-brace 3 lastrow   0 -1 web-post-bl 3 lastrow 0.5 -1 web-post-br)
-   (key-wall-brace 3 lastrow 0.5 -1 web-post-br 4 cornerrow 0.5 -1 web-post-bl)
-   (for [x (range 4 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl x       cornerrow 0 -1 web-post-br)) ; TODO fix extra wall
-   (for [x (range 5 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl (dec x) cornerrow 0 -1 web-post-br))
+   (key-wall-brace 3 lastrow   0 -1 web-post-bl 4 lastrow 0.5 -1 web-post-br)
+   (key-wall-brace 4 lastrow 0.5 -1 web-post-br 5 cornerrow 0.5 -1 web-post-bl)
+   (for [x (range 5 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl x       cornerrow 0 -1 web-post-br)) ; TODO fix extra wall
+   (for [x (range 6 ncols)] (key-wall-brace x cornerrow 0 -1 web-post-bl (dec x) cornerrow 0 -1 web-post-br))
 
    ;thumb ceiling
    ;; (wall-brace thumb-bl-place  0  1 web-post-tr thumb-bl-place  0  1 web-post-tl)
@@ -831,12 +856,12 @@
                    thumb-connectors
                    (difference (union case-walls
                                       ;; pro-micro-holder-squish
-                                      ;; screw-insert-outers
+                                      screw-insert-outers
                                       )
                                screw-insert-holes
                                ))
 
-                  (translate [0 0 -20] (cube 350 350 40))))
+                  (translate [0 0 -30] (cube 350 350 40))))
 
 
 (def model-left-squish (difference
@@ -855,7 +880,7 @@
                                       usb-jack
                                       screw-insert-holes
                                       ))
-                         (translate [0 0 -20] (cube 350 350 40))))
+                         (translate [0 0 -30] (cube 350 350 40))))
 
 
 
@@ -948,3 +973,4 @@
        (difference trrs-holder trrs-holder-hole)))
 
 (defn -main [dum] 1)  ; dummy to make it easier to batch
+
