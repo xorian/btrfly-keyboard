@@ -18,7 +18,7 @@
 (def α (/ π 360))                        ; curvature along the columns
 (def β (/ π 360))                        ; curvature along the rows
 (def centerrow (- nrows 3))             ; controls front-back tilt
-(def centercol 4)                       ; controls left-right tilt / tenting (higher number is more tenting)
+(def centercol 5)                       ; controls left-right tilt / tenting (higher number is more tenting)
 (def tenting-angle (/ π 7))            ; or, change this for more precise tenting control
 (def column-style
   (if (> nrows 5) :orthographic :standard))  ; options include :standard, :orthographic, and :fixed
@@ -856,12 +856,12 @@
                    thumb-connectors
                    (difference (union case-walls
                                       ;; pro-micro-holder-squish
-                                      screw-insert-outers
+                                      ;; screw-insert-outers
                                       )
                                screw-insert-holes
                                ))
 
-                  (translate [0 0 -30] (cube 350 350 40))))
+                  (translate [0 0 -20] (cube 350 350 40))))
 
 
 (def model-left-squish (difference
@@ -880,15 +880,15 @@
                                       usb-jack
                                       screw-insert-holes
                                       ))
-                         (translate [0 0 -30] (cube 350 350 40))))
+                         (translate [0 0 -20] (cube 350 350 40))))
 
 
 
 (spit "things/right.scad"
       (write-scad
        (union
-        (translate[ 87 0 0] ( rotate (/ π 15) [0 0 1] model-right-squish))
-        (translate[ -87 0 0]  ( rotate (/ π 15) [0 0 -1] (mirror [-1 0 0] model-left-squish)))
+        (translate[ 103 0 0] ( rotate (/ π 15) [0 0 1] model-right-squish))
+        (translate[ -103 0 0]  ( rotate (/ π 15) [0 0 -1] (mirror [-1 0 0] model-left-squish)))
         )))
 
 (spit "things/left.scad"
@@ -954,8 +954,8 @@
 (spit "things/squish-plate.scad"
       (write-scad
                    (union
-                    (translate[ 87 0 0] ( rotate (/ π 15) [0 0 1] right-plate-squish-thick))
-                    (translate[ -87 0 0]  ( rotate (/ π 15) [0 0 -1] (mirror [-1 0 0] right-plate-squish-thick)))
+                    (translate[ 103 0 0] ( rotate (/ π 15) [0 0 1] right-plate-squish-thick))
+                    (translate[ -103 0 0]  ( rotate (/ π 15) [0 0 -1] (mirror [-1 0 0] right-plate-squish-thick)))
                     )))
 
 
